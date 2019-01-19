@@ -18,12 +18,12 @@ namespace SimpleBT.Core
 				{
 					return NodeStatus.Running;
 				}
-				if (nodeStatus == NodeStatus.Success)
+				if (nodeStatus == NodeStatus.Failure)
 				{
-					return NodeStatus.Success;
+					return NodeStatus.Failure;
 				}
 			}
-			return NodeStatus.Failure;
+			return NodeStatus.Success;
 		}
 	}
 }

@@ -14,18 +14,30 @@ namespace SimpleBT.Core
 
 		public ILogger Logger { get; set; }
 
+		public BTStatus TreeStatus { get; private set; }
+
 		public SimpleBehaviourTreeAsync()
 		{
 			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
 			rootNode = new RootNode("Root Node");
-			treeNodes.Add(rootNode.Name);
+			treeNodes = new HashSet<string>
+			{
+				rootNode.Name
+			};
 		}
 
 		public BTStatus Execute()
 		{
 			Logger.Info("Started Behaviour Tree");
-			return BTStatus.Success;
+
+			foreach (var node in Traverse())	// A we need to add BFS traversal for execute to properly work
+			{
+				Logger.Info($"Ticking {node}");
+				node.Tick();
+			}
+
+			return TreeStatus;
 		}
 
 		public bool AddChildToParent(BTNode child, string parent, int index)
@@ -33,6 +45,11 @@ namespace SimpleBT.Core
 			@lock.EnterWriteLock();
 			try
 			{
+				if (Exists(child.Name))
+				{
+					throw new BehaviourTreeException($"A node with name {child} already exists in the tree! " +
+						"Consider changing the node name");
+				}
 				Find(parent).AddChildAt(index, child);
 				return true;
 			}

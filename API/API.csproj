@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace></RootNamespace>
     <LangVersion>7.3</LangVersion>
+    <ApplicationIcon />
+    <Win32Resource />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,7 +18,6 @@
 
   <ItemGroup>
     <PackageReference Include="NLog.Config" Version="4.5.11" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
   </ItemGroup>
 
 </Project>

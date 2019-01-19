@@ -18,6 +18,11 @@ namespace SimpleBT
 	public interface IBehaviourTree
 	{
 		/// <summary>
+		/// Access the current status of the behaviour tree.
+		/// </summary>
+		BTStatus TreeStatus { get; }
+
+		/// <summary>
 		/// Adds a child node to the specified parent node at a position.
 		/// </summary>
 		/// <param name="child">A reference to the node you want to add.</param>
