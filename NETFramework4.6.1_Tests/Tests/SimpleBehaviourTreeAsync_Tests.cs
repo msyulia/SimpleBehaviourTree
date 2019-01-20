@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
-
-using NUnit.Framework;
-
+﻿using NUnit.Framework;
 using SimpleBT.Core;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleBT.Tests
 {
@@ -53,15 +52,41 @@ namespace SimpleBT.Tests
 			Assert.IsTrue(nodes.ToList().Count == 1);
 			Assert.IsTrue(nodes.ToList().Single().Name == "Root Node");
 		}
+
 		[TestCase]
 		public void TraverseWithNoChildrenAsync()
 		{
-
 			var behaviourTree = new SimpleBehaviourTreeAsync();
-			var nodes = behaviourTree.Traverse();
-			Assert.IsTrue(nodes != null);
-			Assert.IsTrue(nodes.ToList().Count == 1);
-			Assert.IsTrue(nodes.ToList().Single().Name == "Root Node");
+			bool noThreadExceptions = false;
+
+			void ThreadFunc()
+			{
+				var nodes = behaviourTree.Traverse();
+				Assert.IsTrue(nodes != null);
+				Assert.IsTrue(nodes.ToList().Count == 1);
+				Assert.IsTrue(nodes.ToList().Single().Name == "Root Node");
+				noThreadExceptions = true;
+			}
+			var threads = new Thread[3]
+			{
+				new Thread(() => ThreadFunc()),
+				new Thread(() => ThreadFunc()),
+				new Thread(() => ThreadFunc())
+			};
+
+			foreach (var thread in threads)
+			{
+				thread.Start();
+			}
+			foreach (var thread in threads)
+			{
+				thread.Join();
+			}
+
+			if (noThreadExceptions)
+			{
+				throw new AssertionException("Failed to execute test");
+			}
 		}
 	}
 }

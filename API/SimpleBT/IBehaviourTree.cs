@@ -14,9 +14,13 @@ namespace SimpleBT
 
 	/// <summary>
 	/// An interface for implementing a Behaviour Tree.
+	/// I assume that every node has a unique name.
 	/// </summary>
 	public interface IBehaviourTree
 	{
+		BTNode RootNode { get; }
+		ICollection<string> TreeNodes { get; }
+
 		/// <summary>
 		/// Access the current status of the behaviour tree.
 		/// </summary>
@@ -30,7 +34,7 @@ namespace SimpleBT
 		/// <param name="index">Index at which to add the new node.</param>
 		/// <returns>Returns true if the child was succesfully added from the parent, false if parent was not found in the tree</returns>
 		bool AddChildToParent(BTNode child, string parent, int index);
-		
+
 		/// <summary>
 		/// Removes a node from the parent.
 		/// </summary>
@@ -39,7 +43,7 @@ namespace SimpleBT
 		/// <param name="index">Index at which to add the new node.</param>
 		/// <returns>Returns the removed node if it was found</returns>
 		BTNode RemoveChildFromParent(string child, string parent);
-	
+
 		/// <summary>
 		/// Method for traversing the tree. 
 		/// </summary>

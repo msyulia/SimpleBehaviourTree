@@ -8,22 +8,24 @@ namespace SimpleBT.Core
 {
 	public class SimpleBehaviourTreeAsync : IBehaviourTree
 	{
-		private readonly BTNode rootNode;
-		private readonly HashSet<string> treeNodes;
 		private readonly ReaderWriterLockSlim @lock;
 
 		public ILogger Logger { get; set; }
 
 		public BTStatus TreeStatus { get; private set; }
 
+		public BTNode RootNode { get; }
+
+		public ICollection<string> TreeNodes { get; }
+
 		public SimpleBehaviourTreeAsync()
 		{
 			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
-			rootNode = new RootNode("Root Node");
-			treeNodes = new HashSet<string>
+			RootNode = new RootNode("Root Node");
+			TreeNodes = new HashSet<string>
 			{
-				rootNode.Name
+				RootNode.Name
 			};
 		}
 
@@ -31,7 +33,7 @@ namespace SimpleBT.Core
 		{
 			Logger.Info("Started Behaviour Tree");
 
-			foreach (var node in Traverse())	// A we need to add BFS traversal for execute to properly work
+			foreach (var node in Traverse())    // A we need to add BFS traversal for execute to properly work
 			{
 				Logger.Info($"Ticking {node}");
 				node.Tick();
@@ -88,22 +90,7 @@ namespace SimpleBT.Core
 			@lock.EnterReadLock();
 			try
 			{
-				HashSet<BTNode> discoveredNodes = new HashSet<BTNode>();
-
-				void ExploreTree(BTNode node)
-				{
-					discoveredNodes.Add(node);
-					foreach (var childNode in rootNode)
-					{
-						if (!discoveredNodes.Contains(childNode))
-						{
-							ExploreTree(childNode);
-						}
-					}
-				}
-				ExploreTree(rootNode);
-
-				return discoveredNodes;
+				
 			}
 			finally
 			{
@@ -116,7 +103,7 @@ namespace SimpleBT.Core
 			@lock.EnterReadLock();
 			try
 			{
-				return treeNodes.Contains(node);
+				return TreeNodes.Contains(node);
 			}
 			finally
 			{
