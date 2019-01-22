@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace SimpleBT.Core.Nodes
+namespace SimpleBT.Core
 {
 	public class DFSTraversal<T> : ITreeTraversal<T> 
 		where T : ICollection<BTNode>, new()

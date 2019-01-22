@@ -18,6 +18,8 @@ namespace SimpleBT.Core
 
 		public ICollection<string> TreeNodes { get; }
 
+		public ITreeTraversal<HashSet<BTNode>> TreeTraversalStrategy { get; set; }
+
 		public SimpleBehaviourTreeAsync()
 		{
 			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
@@ -90,7 +92,7 @@ namespace SimpleBT.Core
 			@lock.EnterReadLock();
 			try
 			{
-				
+				return TreeTraversalStrategy.Traverse(this);
 			}
 			finally
 			{
