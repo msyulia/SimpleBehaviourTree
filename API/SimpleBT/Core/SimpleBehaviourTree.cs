@@ -6,21 +6,21 @@ using System.Threading;
 
 namespace SimpleBT.Core
 {
-	public class SimpleBehaviourTreeAsync : IBehaviourTree
+	public class SimpleBehaviourTree : IBehaviourTree
 	{
 		private readonly ReaderWriterLockSlim @lock;
-
-		public ILogger Logger { get; set; }
 
 		public BTStatus TreeStatus { get; private set; }
 
 		public BTNode RootNode { get; }
 
+		public ILogger Logger { get; set; }
+
 		public ICollection<string> TreeNodes { get; }
 
 		public ITreeTraversal<HashSet<BTNode>> TreeTraversalStrategy { get; set; }
 
-		public SimpleBehaviourTreeAsync()
+		public SimpleBehaviourTree()
 		{
 			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
@@ -35,7 +35,11 @@ namespace SimpleBT.Core
 		{
 			Logger.Info("Started Behaviour Tree");
 
-			foreach (var node in Traverse())    // A we need to add BFS traversal for execute to properly work
+			/*
+			 * To properly start all nodes we need to explore the tree using Breadth First Search
+			 */ 
+			var traverser = new BFSTraversal<HashSet<BTNode>>(); 
+			foreach (var node in traverser.Traverse(this))
 			{
 				Logger.Info($"Ticking {node}");
 				node.Tick();

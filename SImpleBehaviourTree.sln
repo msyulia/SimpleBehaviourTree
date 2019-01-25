@@ -4,7 +4,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{E798D94A-5399-4DD2-AEDB-F92377F0CED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETFramework4.6.1_Tests", "NETFramework4.6.1_Tests\NETFramework4.6.1_Tests.csproj", "{29385221-AEF8-45B4-9EF5-C5F62DB6BDAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETFrameworkTests", "NETFramework4.6.1_Tests\NETFrameworkTests.csproj", "{29385221-AEF8-45B4-9EF5-C5F62DB6BDAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
