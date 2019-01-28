@@ -21,7 +21,7 @@ Selector node - iterates over child nodes and ticks them, until the first child 
 Sequence node - iterates over child nodes and ticks them, finds the first child that has not yet succeeded
 Action node - actually does your work like moving the character to a nearest cover or shoot at the closest target
 
-Action nodes are leaf nodes in the tree, meaning they cannot have any children... unless you add them :D 
+Action nodes are leaf nodes in the tree, meaning they cannot have any children... unless you add them :grin:
 
 ## API
 
