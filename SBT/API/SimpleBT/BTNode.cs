@@ -26,7 +26,7 @@ namespace SimpleBT
 
 		public virtual List<BTNode> Children
 		{
-			get => Children;
+			get => m_Children;
 			private set => Children = value;
 		}
 
@@ -34,12 +34,6 @@ namespace SimpleBT
 		{
 			this.Name = Name;
 			this.m_Children = new List<BTNode>();
-		}
-
-		protected BTNode(string Name,
-						 List<BTNode> Children) : this(Name)
-		{
-			m_Children = Children;
 		}
 
 		public virtual void AddChild(BTNode node) => m_Children.Add(node);

@@ -18,7 +18,7 @@ namespace SimpleBT
 	/// </summary>
 	public interface IBehaviourTree
 	{
-		BTNode RootNode { get; }
+		BTNode RootNode { get; set; }
 		ICollection<string> TreeNodes { get; }
 
 		/// <summary>

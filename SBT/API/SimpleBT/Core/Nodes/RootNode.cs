@@ -7,7 +7,7 @@ namespace SimpleBT.Core
 		public RootNode(string Name) : base(Name) { }
 
 		public RootNode(string Name,
-						List<BTNode> Children) : base(Name, Children) { }
+						List<BTNode> Children) : base(Name) { }
 
 		public override NodeStatus Tick()
 		{

@@ -17,7 +17,7 @@ namespace SimpleBT.Core
 				while (unexploredNodes.Count > 0)
 				{
 					var currentNode = unexploredNodes.Dequeue();
-					resultNodes.Add(node);
+					resultNodes.Add(currentNode);
 					foreach (var childNode in currentNode)
 					{
 						if (!exploredNodes.Contains(childNode))

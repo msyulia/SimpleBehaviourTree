@@ -7,7 +7,7 @@ namespace SimpleBT.Core
 		public SequenceNode(string Name) : base(Name) { }
 
 		public SequenceNode(string Name,
-							List<BTNode> Children) : base(Name, Children) { }
+							List<BTNode> Children) : base(Name) { }
 
 		public override NodeStatus Tick()
 		{

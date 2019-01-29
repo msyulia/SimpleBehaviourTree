@@ -12,23 +12,29 @@ namespace SimpleBT.Core
 
 		public BTStatus TreeStatus { get; private set; }
 
-		public BTNode RootNode { get; }
+		public BTNode RootNode { get; set; }
 
 		public ILogger Logger { get; set; }
 
-		public ICollection<string> TreeNodes { get; }
-
 		public ITreeTraversal<HashSet<BTNode>> TreeTraversalStrategy { get; set; }
+
+		public ICollection<string> TreeNodes { get; private set; }
 
 		public SimpleBehaviourTree()
 		{
-			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+			@lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
+			TreeTraversalStrategy = new BFSTraversal<HashSet<BTNode>>();
 			RootNode = new RootNode("Root Node");
 			TreeNodes = new HashSet<string>
 			{
 				RootNode.Name
 			};
+		}
+
+		public SimpleBehaviourTree(ITreeTraversal<HashSet<BTNode>> treeTraversalStrategy) : this()
+		{
+			TreeTraversalStrategy = treeTraversalStrategy;
 		}
 
 		public BTStatus Execute()
@@ -37,8 +43,8 @@ namespace SimpleBT.Core
 
 			/*
 			 * To properly start all nodes we need to explore the tree using Breadth First Search
-			 */ 
-			var traverser = new BFSTraversal<HashSet<BTNode>>(); 
+			 */
+			var traverser = new BFSTraversal<HashSet<BTNode>>();
 			foreach (var node in traverser.Traverse(this))
 			{
 				Logger.Info($"Ticking {node}");
@@ -50,19 +56,21 @@ namespace SimpleBT.Core
 
 		public bool AddChildToParent(BTNode child, string parent, int index)
 		{
+			if (Exists(child.Name))
+			{
+				return false;
+			}
+
 			@lock.EnterWriteLock();
 			try
 			{
-				if (Exists(child.Name))
+				TreeNodes.Add(child.Name);
+				var parentNode = Find(parent);
+				if (!(parentNode is null))
 				{
-					throw new BehaviourTreeException($"A node with name {child} already exists in the tree! " +
-						"Consider changing the node name");
+					parentNode.AddChildAt(index, child);
+					return true;
 				}
-				Find(parent).AddChildAt(index, child);
-				return true;
-			}
-			catch (Exception)
-			{
 				return false;
 			}
 			finally
@@ -78,13 +86,14 @@ namespace SimpleBT.Core
 			{
 				if (Exists(child) && Exists(parent))
 				{
-					return Find(parent)
-						.RemoveChild(child);
+					var parentNode = Find(parent);
+					var deletedNode = parentNode.RemoveChild(child);
+					TreeNodes.Remove(child);
+					return deletedNode;
 				}
 				throw new BehaviourTreeException(
 					$"{child} or {parent} not found in this behaviour tree");
 			}
-
 			finally
 			{
 				@lock.ExitWriteLock();
@@ -122,9 +131,13 @@ namespace SimpleBT.Core
 			@lock.EnterReadLock();
 			try
 			{
-				return Traverse().
+				return TreeTraversalStrategy.Traverse(this).
 					Where(treeNode => treeNode.Name == nodeName).
 					Single();
+			}
+			catch (InvalidOperationException)
+			{
+				return null;
 			}
 			finally
 			{
